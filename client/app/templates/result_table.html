@@ -1,0 +1,39 @@
+<table>
+    <thead>
+      <tr>
+        <th scope="col">Route</th>
+        <th scope="col">Average Consumption</th>
+        <th scope="col">Standard Deviation</th>
+        <th scope="col">Total bus trips</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% set num_results = results|length %}
+        {% set green = 0 %}
+        {% set red = 200 %}
+        {% set num_steps = num_results - 1 %}
+        {% for result in results %}
+        {% if loop.index == 1 %}
+          {% set rgb_value = 'rgb(' ~ green ~ ', 200, 0)' %}
+        {% elif loop.index == num_results %}
+          {% set rgb_value = 'rgb(200, 0, 0)' %}
+        {% else %}
+          {% set interpolation_factor = (loop.index - 1) / num_steps %}
+          {% set green_value  = red - (200 - green) * interpolation_factor %}
+          {% set red_value = 200 - green_value %}
+          {% set rgb_value = 'rgb(' ~ red_value ~ ', ' ~ green_value ~ ', 0)' %}
+        {% endif %}
+        <tr>
+          <th scope="row" style="background-color: {{ rgb_value }}">{{ result['route'] }}</th>
+          <td>{{ ((result['data']['mean'] / 400000) * 100)|round(1, 'floor')  }}%</td>
+          <td>{{ ((result['data']['stdev'] / 400000) * 100)|round(1, 'floor') }}%</td>
+          <td>{{  result['data']['number_of_vehicle'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+
+      </tr>
+    </tfoot>
+</table>

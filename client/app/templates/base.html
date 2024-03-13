@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.indigo.min.css"
+  />
+</head>
+<body>
+
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
+  <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+
+  <nav class="container">
+    <ul>
+      <li><srtong>SimClient</srtong></li>
+    </ul>
+    <ul>
+      <li>Powered by ArmandoBausano</li>
+    </ul>
+  </nav>
+  <main class="container">
+      {% include 'simulation_selection.html' %}
+  </main>
+</body>
+</html>

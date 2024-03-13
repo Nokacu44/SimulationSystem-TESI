@@ -1,0 +1,15 @@
+<div>
+    <h2>Simulation: {{simulation_name}}</h2>
+    <details {% if results %} open {% endif %} >
+        <summary><strong>Results</strong></summary>
+        <div id="results" _="on htmx:afterSwap add @open to the closest <details/>">
+            {% if results %}
+                {% include 'result_table.html' %}
+            {% else %}
+                No data
+            {% endif %}
+        </div>
+
+    </details>
+    {% include 'bus_customization.html' %}
+</div>

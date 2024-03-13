@@ -1,0 +1,50 @@
+<div id="component_root" hx-ext="response-targets">
+    <form hx-post="/execute_simulation?sim_name={{- simulation_name -}}" hx-target="#results" _="
+    on htmx:beforeRequest set #submit_button's @aria-busy to 'true' 
+        then add @disabled to #submit_buttonthen set #submit_button's innerHTML to 'Loading...' 
+    on htmx:afterRequest set #submit_button's @aria-busy to 'false' 
+        then remove @disabled from #submit_button then set #submit_button's innerHTML to 'Perform Simulation' ">
+        <h4>
+            Bus vehicle customization 
+        </h4>
+        <label for="max_battery">
+             Max Battery Capacity
+            <input type="number" name="max_battery" aria-label="number" placeholder="kw"  value={{ custom_vtype.maximumBatteryCapacity if custom_vtype else "400000" }}>
+        </label>
+        <label for="max_power">
+            Max Power
+           <input type="number" name="max_power" aria-label="number" placeholder="kw" value={{ custom_vtype.maximumPower if custom_vtype else "1000" }}>
+       </label>
+       
+       <label for="vehicle_mass">
+            Vehicle Mass
+            <input type="number" name="vehicle_mass" aria-label="number" placeholder="kg" value={{ custom_vtype.vehicleMass if custom_vtype else "10000" }}>
+       </label>
+
+        <label for="person_capacity">
+            Person Capacity
+        <input type="number" name="person_capacity" aria-label="number" placeholder="kg" value={{ custom_vtype.personCapacity if custom_vtype else "70" }}>
+        </label>
+
+        <label for="propulsion_efficiency">
+            Propulsion Efficiency
+        <input type="number" name="propulsion_efficiency" aria-label="number" placeholder="kw" value={{ custom_vtype.propulsionEfficiency if custom_vtype else "0.9" }}>
+        </label>
+
+        <label for="recuperation_efficiency">
+            Recuperation Efficiency
+        <input type="number" name="recuperation_efficiency" aria-label="number" placeholder="N" value={{ custom_vtype.recuperationEfficiency if custom_vtype else "0.9" }}>
+        </label>
+
+        <label for="constant_power_intake">
+            Constant Power Intake
+        <input type="number" name="constant_power_intake" aria-label="number" placeholder="N" value={{ custom_vtype.constantPowerIntake if custom_vtype else "100" }}>
+        </label>
+
+
+       <button id="submit_button" type="submit" role="button" >Perform Simulation</button>
+    </form>
+
+
+</div>
+

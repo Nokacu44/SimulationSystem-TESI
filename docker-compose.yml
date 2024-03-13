@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  # applicazione principale GUI
+  client:
+    build: 
+      context: ./client
+    ports:
+      - "7070:7070"  
+    networks:
+      - app_network
+    volumes:
+      -  ./data:/client_app/app/simulations
+  # servizio incaricato di eseguire simulazioni e restituire risultati
+  simulation_app:
+    build: 
+      context: ./simulation_app
+    ports:
+      - "6969:6969"  
+    networks:
+      - app_network
+    volumes:
+      - ./data:/sim_app/app/simulations_data
+  # servizio incraicato di fornire dati di elevazione per file openstreetmap
+  opentopodata:
+    build: 
+      context: ./opentopodata
+      dockerfile: docker/Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - app_network
+    volumes:
+      - "./opentopodata/data:/app/data:ro"
+    environment:
+      - N_UWSGI_THREADS=16
+    command: sh -c "/usr/bin/supervisord -c /app/docker/supervisord.conf"
+
+
+volumes:
+  data:
+    driver_opts:
+      type: none
+      device: ./data
+      o: bind
+
+networks:
+  app_network:
+    driver: bridge

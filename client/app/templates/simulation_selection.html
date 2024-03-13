@@ -1,0 +1,29 @@
+<div id="sim_selector" hx-ext="response-targets">
+    <h1>Simulation Hub</h1>
+    <hr>
+    <br>
+
+
+    {% for simulation in simulations %}
+        <div _="on mouseover show #{{simulation}}-remove-btn then transition #{{simulation}}-remove-btn opacity to 1 over 200ms
+        on mouseleave transition  #{{simulation}}-remove-btn opacity to 0 over 250ms then hide #{{simulation}}-remove-btn">
+            <fieldset role="group"  >
+                <input name="email" type="text" readonly  hx-get="/simulation?sim={{simulation}}" hx-trigger="click" hx-push-url="true" hx-target="#sim_selector" hx-target-4*="#error" value="{{simulation}}"/>
+                <input style="opacity: 0; background-color: brown;" id="{{simulation}}-remove-btn" type="submit" value="x" hx-delete="/simulation?sim={{simulation}}" hx-confirm="Are you sure?" _="
+                init hide me
+                on htmx:afterRequest remove closest <div/>"/>
+            </fieldset>
+        </div>
+    {% endfor %}
+
+    <button type="submit" _="on click hide me then show #new_sim">+</button>
+    <nav id="new_sim" _="init hide me">
+        <input form="add_sim_form" type="text" name="sim_name" id="sim_name" placeholder="insert simulation name"/>
+        <form id="add_sim_form" hx-get="/add_simulation" hx-target="#sim_selector" hx-target-4* = "#error"  >
+            <button>Upload</button>
+        </form>
+    </nav>
+    <pre id="error" _="
+    init hide me 
+    on htmx:afterSwap show me">{Error Message}</pre>
+</div>

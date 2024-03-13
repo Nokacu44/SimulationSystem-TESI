@@ -1,0 +1,64 @@
+<div id="component_root"  hx-ext="response-targets" _=" 
+        on error(value) from file_form set $error_list to value
+        ">
+    <form id="file_form" hx-post="/upload_files?sim_name={{- simulation_name -}}" hx-encoding="multipart/form-data" hx-target="#success" hx-target-4*="#error">
+        <!-- OSM FILE -->
+        <details>
+            <summary>
+                Step 1
+            </summary>
+              <p>Only .som or .xml files allowed</p>
+              <br>
+              <label for="osm">File browser
+                <input type="file" id="osm" name="osm" aria-invalid="grammar"
+                _="on error[value.includes(@name)] from file_form set my @aria-invalid to 'true'
+                    on validate log 'validation' then if my.files.length == 0 set @aria-invalid to 'true' then send updateState to #progress_bar end
+
+                    on change if my.files.length == 0 
+                        set @aria-invalid to 'true' then decrement #progress_bar's @value 
+                    else
+                        set @aria-invalid to 'false' then increment #progress_bar's @value 
+                    end
+                    
+                    on change or cancel send updateState to #submit_button then send updateState to #progress_bar">
+              </label>
+        </details>
+
+        <!-- GTFS FILE -->
+        <details>
+            <summary>
+                Step 2
+            </summary>
+              <p>Only .zip file allowed</p>
+              <br>
+              <label for="gtfs">File browser
+                <input type="file" id="gtfs" name="gtfs" aria-invalid="grammar" 
+                _="on error[value.includes(@name)] from file_form set my @aria-invalid to 'true'
+
+                on change if my.files.length == 0 
+                    set @aria-invalid to 'true' then decrement #progress_bar's @value 
+                else
+                    set @aria-invalid to 'false' then increment #progress_bar's @value 
+                end
+
+                    on change or cancel send updateState to #submit_button then send updateState to #progress_bar">
+            </label>
+        </details> 
+        <button aria-busy="false" id="submit_button" type="submit" role="button" disabled   _="on updateState if #gtfs.files.length > 0 and #osm.files.length > 0 then remove @disabled from me else add @disabled to me">Invia</button>
+        <progress value="0" max="2" id="progress_bar" _=" 
+            on error from file_form if $error_list is not empty set @value to @max - $error_list.split(',').length
+            "></progress>
+    </form>
+    <pre id="success" hx-get="/process_files?sim_name={{- simulation_name -}}" hx-trigger="htmx:afterSwap" hx-target="#component_root" _="
+        init hide me
+        on htmx:afterSwap show me then add @disabled to #submit_button then set #submit_button's @aria-busy to 'true' then set #submit_button's innerHTML to 'Loading...' ">{Success Message}</pre>
+    <pre id="error" _="
+        init hide me 
+        on htmx:afterSwap show me">{Error Message}</pre>
+    <script>
+        document.body.addEventListener('htmx:beforeRequest', function (evt) {
+            //console.log(evt)
+          });
+    </script>
+</div>
+
